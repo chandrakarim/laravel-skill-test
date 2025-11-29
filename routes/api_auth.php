@@ -2,17 +2,6 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
-Route::get('/', function () {
-    return Inertia::render('welcome');
-})->name('home');
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('dashboard', function () {
-        return Inertia::render('dashboard');
-    })->name('dashboard');
-});
 
 Route::middleware('web')->group(function () {
 
@@ -23,7 +12,9 @@ Route::middleware('web')->group(function () {
         ]);
 
         if (! auth()->attempt($credentials)) {
-            return response()->json(['message' => 'Invalid credentials'], 422);
+            return response()->json([
+                'message' => 'Invalid credentials',
+            ], 422);
         }
 
         $request->session()->regenerate();
@@ -36,15 +27,12 @@ Route::middleware('web')->group(function () {
 
     Route::post('/api-logout', function (Request $request) {
         auth()->logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return response()->json(['message' => 'Logged out']);
+        return response()->json([
+            'message' => 'Logged out',
+        ]);
     });
-});
 
-require __DIR__.'/settings.php';
-require __DIR__.'/auth.php';
-require __DIR__.'/posts.php';
-require __DIR__.'/api_auth.php';
+});
