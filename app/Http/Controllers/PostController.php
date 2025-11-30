@@ -16,7 +16,7 @@ class PostController extends Controller
                     ->orWhere('published_at', '<=', now());
             })
             ->with('user')
-            ->paginate(100);
+            ->paginate(20);
 
         // $post = Post::all();
 

@@ -1,0 +1,256 @@
+{
+	"info": {
+		"_postman_id": "d3dd1827-5b4e-4acf-8dc4-2f5da26ffd83",
+		"name": "Laravel Skill Test API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "16252425"
+	},
+	"item": [
+		{
+			"name": "Authencation",
+			"item": [
+				{
+					"name": "Get CSRF Cookie",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let token = pm.cookies.get('XSRF-TOKEN');",
+									"if (token) { pm.environment.set('xsrf_token', decodeURIComponent(token)); }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/sanctum/csrf-cookie",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"sanctum",
+								"csrf-cookie"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let token = pm.cookies.get('XSRF-TOKEN');",
+									"if (token) { pm.environment.set('xsrf_token', decodeURIComponent(token)); }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{xsrf_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"test@example.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/login",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "Cek User",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Post",
+			"item": [
+				{
+					"name": "Get Active Posts",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/posts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create Post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let data = pm.response.json();",
+									"pm.environment.set('post_id', data.id);",
+									"pm.test('Post created', () => { pm.response.to.have.status(201); });"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let token = pm.cookies.get('XSRF-TOKEN');",
+									"if (token) { pm.environment.set('xsrf_token', decodeURIComponent(token)); }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{xsrf_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Post Baru\",\n  \"content\": \"Isi konten post\",\n  \"is_draft\": false,\n  \"published_at\": null\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/posts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Post",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let token = pm.cookies.get('XSRF-TOKEN');",
+									"if (token) { pm.environment.set('xsrf_token', decodeURIComponent(token)); }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{xsrf_token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"title\": \"Post Updated\",\n  \"content\": \"Konten updated\",\n  \"is_draft\": false,\n  \"published_at\": null\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/posts/{{post_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts",
+								"{{post_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Post",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"let token = pm.cookies.get('XSRF-TOKEN');",
+									"if (token) { pm.environment.set('xsrf_token', decodeURIComponent(token)); }"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-XSRF-TOKEN",
+								"value": "{{xsrf_token}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/posts/{{post_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts",
+								"{{post_id}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
